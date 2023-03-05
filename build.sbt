@@ -17,10 +17,6 @@ lazy val commonSettings = Seq(
 
 lazy val validation = (project in file("."))
   .aggregate(
-    validationCore.jvm,
-    validationCore.js,
-    validationGeneric.jvm,
-    validationGeneric.js,
     validationSpire.jvm,
     validationSpire.js,
   )
@@ -28,26 +24,6 @@ lazy val validation = (project in file("."))
   .settings(commonSettings)
   .settings(
     name := "validation",
-  )
-
-lazy val validationCore = (crossProject(JSPlatform, JVMPlatform) in file("validation-core"))
-  .settings(commonSettings)
-  .settings(
-    name := "validation-core",
-    libraryDependencies ++= Seq(
-      "org.typelevel" %%% "cats-core" % catsVersion,
-      "com.peknight" %%% "error-core" % pekErrorVersion,
-    ),
-  )
-
-lazy val validationGeneric = (crossProject(JSPlatform, JVMPlatform) in file("validation-generic"))
-  .dependsOn(validationCore)
-  .settings(commonSettings)
-  .settings(
-    name := "validation-generic",
-    libraryDependencies ++= Seq(
-      "com.peknight" %%% "generic-core" % pekGenericVersion,
-    ),
   )
 
 lazy val validationSpire = (crossProject(JSPlatform, JVMPlatform) in file("validation-spire"))
@@ -59,6 +35,4 @@ lazy val validationSpire = (crossProject(JSPlatform, JVMPlatform) in file("valid
     ),
   )
 
-val catsVersion = "2.9.0"
 val pekErrorVersion = "0.1.0-SNAPSHOT"
-val pekGenericVersion = "0.1.0-SNAPSHOT"
