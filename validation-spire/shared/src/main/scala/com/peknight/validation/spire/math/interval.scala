@@ -11,71 +11,71 @@ import spire.math.Interval
 
 object interval:
   object either:
-    def contains[N: Order : Show](value: N, label: => String, interval: Interval[N]): Either[Error, N] =
+    def contains[N: Order : Show](value: N, interval: Interval[N], label: => String): Either[Error, N] =
       if interval.contains(value) then value.asRight[Error]
-      else IntervalNotContainsError[N](value, label, interval).asLeft[N]
+      else IntervalNotContainsError[N](label, value, interval).asLeft[N]
 
-    def above[N: Order : Show](value: N, label: => String, lower: N): Either[Error, N] =
+    def above[N: Order : Show](value: N, lower: N, label: => String): Either[Error, N] =
       if value > lower then value.asRight[Error]
-      else IntervalNotContainsError[N](value, label, Interval.above(lower)).asLeft[N]
+      else IntervalNotContainsError[N](label, value, Interval.above(lower)).asLeft[N]
 
-    def atOrBelow[N: Order : Show](value: N, label: => String, upper: N): Either[Error, N] =
+    def atOrBelow[N: Order : Show](value: N, upper: N, label: => String): Either[Error, N] =
       if value <= upper then value.asRight[Error]
-      else IntervalNotContainsError[N](value, label, Interval.atOrBelow(upper)).asLeft[N]
+      else IntervalNotContainsError[N](label, value, Interval.atOrBelow(upper)).asLeft[N]
 
-    def below[N: Order : Show](value: N, label: => String, upper: N): Either[Error, N] =
+    def below[N: Order : Show](value: N, upper: N, label: => String): Either[Error, N] =
       if value < upper then value.asRight[Error]
-      else IntervalNotContainsError[N](value, label, Interval.below(upper)).asLeft[N]
+      else IntervalNotContainsError[N](label, value, Interval.below(upper)).asLeft[N]
 
-    def atOrAbove[N: Order : Show](value: N, label: => String, lower: N): Either[Error, N] =
+    def atOrAbove[N: Order : Show](value: N, lower: N, label: => String): Either[Error, N] =
       if value >= lower then value.asRight[Error]
-      else IntervalNotContainsError[N](value, label, Interval.atOrAbove(lower)).asLeft[N]
+      else IntervalNotContainsError[N](label, value, Interval.atOrAbove(lower)).asLeft[N]
 
     def positive[N: Order : Show : Numeric](value: N, label: => String): Either[Error, N] =
-      above(value, label, Numeric[N].zero)
+      above(value, Numeric[N].zero, label)
 
     def nonPositive[N: Order : Show : Numeric](value: N, label: => String): Either[Error, N] =
-      atOrBelow(value, label, Numeric[N].zero)
+      atOrBelow(value, Numeric[N].zero, label)
 
     def negative[N: Order : Show : Numeric](value: N, label: => String): Either[Error, N] =
-      below(value, label, Numeric[N].zero)
+      below(value, Numeric[N].zero, label)
 
     def nonNegative[N: Order : Show : Numeric](value: N, label: => String): Either[Error, N] =
-      atOrAbove(value, label, Numeric[N].zero)
+      atOrAbove(value, Numeric[N].zero, label)
   end either
 
   object validated:
-    def contains[N: Order : Show](value: N, label: => String, interval: Interval[N]): Validated[Error, N] =
+    def contains[N: Order : Show](value: N, interval: Interval[N], label: => String): Validated[Error, N] =
       if interval.contains(value) then value.valid[Error]
-      else IntervalNotContainsError[N](value, label, interval).invalid[N]
+      else IntervalNotContainsError[N](label, value, interval).invalid[N]
 
-    def above[N: Order : Show](value: N, label: => String, lower: N): Validated[Error, N] =
+    def above[N: Order : Show](value: N, lower: N, label: => String): Validated[Error, N] =
       if value > lower then value.valid[Error]
-      else IntervalNotContainsError[N](value, label, Interval.above(lower)).invalid[N]
+      else IntervalNotContainsError[N](label, value, Interval.above(lower)).invalid[N]
 
-    def atOrBelow[N: Order : Show](value: N, label: => String, upper: N): Validated[Error, N] =
+    def atOrBelow[N: Order : Show](value: N, upper: N, label: => String): Validated[Error, N] =
       if value <= upper then value.valid[Error]
-      else IntervalNotContainsError[N](value, label, Interval.atOrBelow(upper)).invalid[N]
+      else IntervalNotContainsError[N](label, value, Interval.atOrBelow(upper)).invalid[N]
 
-    def below[N: Order : Show](value: N, label: => String, upper: N): Validated[Error, N] =
+    def below[N: Order : Show](value: N, upper: N, label: => String): Validated[Error, N] =
       if value < upper then value.valid[Error]
-      else IntervalNotContainsError[N](value, label, Interval.below(upper)).invalid[N]
+      else IntervalNotContainsError[N](label, value, Interval.below(upper)).invalid[N]
 
-    def atOrAbove[N: Order : Show](value: N, label: => String, lower: N): Validated[Error, N] =
+    def atOrAbove[N: Order : Show](value: N, lower: N, label: => String): Validated[Error, N] =
       if value >= lower then value.valid[Error]
-      else IntervalNotContainsError[N](value, label, Interval.atOrAbove(lower)).invalid[N]
+      else IntervalNotContainsError[N](label, value, Interval.atOrAbove(lower)).invalid[N]
 
     def positive[N: Order : Show : Numeric](value: N, label: => String): Validated[Error, N] =
-      above(value, label, Numeric[N].zero)
+      above(value, Numeric[N].zero, label)
 
     def nonPositive[N: Order : Show : Numeric](value: N, label: => String): Validated[Error, N] =
-      atOrBelow(value, label, Numeric[N].zero)
+      atOrBelow(value, Numeric[N].zero, label)
 
     def negative[N: Order : Show : Numeric](value: N, label: => String): Validated[Error, N] =
-      below(value, label, Numeric[N].zero)
+      below(value, Numeric[N].zero, label)
 
     def nonNegative[N: Order : Show : Numeric](value: N, label: => String): Validated[Error, N] =
-      atOrAbove(value, label, Numeric[N].zero)
+      atOrAbove(value, Numeric[N].zero, label)
   end validated
 
 end interval
