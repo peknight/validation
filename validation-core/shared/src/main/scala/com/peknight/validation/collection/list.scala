@@ -3,7 +3,6 @@ package com.peknight.validation.collection
 import cats.data.{NonEmptyList, Validated}
 import cats.syntax.either.*
 import cats.syntax.validated.*
-import com.peknight.error.Error
 import com.peknight.error.collection.{CollectionEmptyError, CollectionEmptyErrorShow}
 
 object list:
