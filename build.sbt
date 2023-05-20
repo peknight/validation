@@ -22,7 +22,6 @@ lazy val validation = (project in file("."))
     validationSpire.jvm,
     validationSpire.js,
   )
-  .enablePlugins(JavaAppPackaging)
   .settings(commonSettings)
   .settings(
     name := "validation",
