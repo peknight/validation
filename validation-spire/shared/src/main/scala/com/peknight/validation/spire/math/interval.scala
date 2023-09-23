@@ -5,11 +5,20 @@ import cats.syntax.either.*
 import cats.syntax.order.*
 import cats.syntax.validated.*
 import cats.{Order, Show}
-import com.peknight.error.spire.math.{IntervalNotContainsError, IntervalNotContainsErrorShow}
+import com.peknight.error.spire.math.{IntervalEmptyError, IntervalEmptyErrorShow, IntervalNotContainsError, IntervalNotContainsErrorShow}
 import spire.math.Interval
 
 object interval:
   object either:
+    def nonEmpty[A](interval: Interval[A], label: => String, message: => String)
+    : Either[IntervalEmptyError, Interval[A]] =
+      if interval.nonEmpty then interval.asRight[IntervalEmptyError]
+      else IntervalEmptyError(label, message).asLeft[Interval[A]]
+
+    def nonEmpty[A](interval: Interval[A], label: => String)(using IntervalEmptyErrorShow)
+    : Either[IntervalEmptyError, Interval[A]] =
+      if interval.nonEmpty then interval.asRight[IntervalEmptyError]
+      else IntervalEmptyError(label).asLeft[Interval[A]]
 
     def contains[N: Order : Show](value: N, interval: Interval[N], label: => String, message: => String)
     : Either[IntervalNotContainsError[N], N] =
@@ -95,6 +104,17 @@ object interval:
   end either
 
   object validated:
+
+    def nonEmpty[A](interval: Interval[A], label: => String, message: => String)
+    : Validated[IntervalEmptyError, Interval[A]] =
+      if interval.nonEmpty then interval.valid[IntervalEmptyError]
+      else IntervalEmptyError(label, message).invalid[Interval[A]]
+
+    def nonEmpty[A](interval: Interval[A], label: => String)(using IntervalEmptyErrorShow)
+    : Validated[IntervalEmptyError, Interval[A]] =
+      if interval.nonEmpty then interval.valid[IntervalEmptyError]
+      else IntervalEmptyError(label).invalid[Interval[A]]
+
     def contains[N: Order : Show](value: N, interval: Interval[N], label: => String, message: => String)
     : Validated[IntervalNotContainsError[N], N] =
       if interval.contains(value) then value.valid[IntervalNotContainsError[N]]
