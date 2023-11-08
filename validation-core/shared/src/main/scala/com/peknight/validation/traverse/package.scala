@@ -5,27 +5,15 @@ import cats.data.Validated
 import cats.syntax.either.*
 import cats.syntax.traverse.*
 import com.peknight.error.Error
-import com.peknight.error.traverse.TraverseError.toTraverseError
-import com.peknight.error.traverse.{TraverseError, TraverseErrorShow}
 
 package object traverse:
   object either:
-    def traverse[F[_] : Traverse, A, B](fa: F[A], label: => String, message: => String)(f: A => Either[Error, B])
-    : Either[TraverseError[F[A]], F[B]] =
-      fa.traverse(a => f(a).toValidated).toEither.left.map(_.toTraverseError(label, fa, message))
-
-    def traverse[F[_], A, B](fa: F[A], label: => String)(f: A => Either[Error, B])
-                            (using Traverse[F], TraverseErrorShow[F[A]]): Either[TraverseError[F[A]], F[B]] =
-      fa.traverse(a => f(a).toValidated).toEither.left.map(_.toTraverseError(label, fa))
+    def traverse[F[_] : Traverse, E, A, B](fa: F[A])(f: A => Either[E, B]): Either[Error, F[B]] =
+      fa.traverse(a => f(a).toValidated.leftMap(Error.pure)).toEither
   end either
 
   object validated:
-    def traverse[F[_] : Traverse, A, B](fa: F[A], label: => String, message: => String)(f: A => Validated[Error, B])
-    : Validated[TraverseError[F[A]], F[B]] =
-      fa.traverse(f).leftMap(_.toTraverseError(label, fa, message))
-
-    def traverse[F[_], A, B](fa: F[A], label: => String)(f: A => Validated[Error, B])
-                            (using Traverse[F], TraverseErrorShow[F[A]]): Validated[TraverseError[F[A]], F[B]] =
-      fa.traverse(f).leftMap(_.toTraverseError(label, fa))
+    def traverse[F[_] : Traverse, E, A, B](fa: F[A])(f: A => Validated[E, B]): Validated[Error, F[B]] =
+      fa.traverse(a => f(a).leftMap(Error.pure))
   end validated
 end traverse
