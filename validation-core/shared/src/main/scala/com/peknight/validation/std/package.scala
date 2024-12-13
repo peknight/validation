@@ -2,6 +2,7 @@ package com.peknight.validation
 
 import cats.data.Validated
 import cats.syntax.either.*
+import cats.syntax.option.*
 import cats.syntax.validated.*
 import com.peknight.error.std.WrongClassTag
 
@@ -28,4 +29,10 @@ package object std:
         case a: A => a.valid
         case a => WrongClassTag[A](a).invalid
   end validated
+  object option:
+    def typed[A: ClassTag](a: Any): Option[A] =
+      a match
+        case a: A => a.some
+        case a => none[A]
+  end option
 end std
