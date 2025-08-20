@@ -4,6 +4,7 @@ import com.peknight.build.sbt.*
 commonSettings
 
 lazy val validation = (project in file("."))
+  .settings(name := "validation")
   .aggregate(
     validationCore.jvm,
     validationCore.js,
@@ -11,19 +12,12 @@ lazy val validation = (project in file("."))
     validationSpire.jvm,
     validationSpire.js,
   )
-  .settings(
-    name := "validation",
-  )
 
 lazy val validationCore = (crossProject(JVMPlatform, JSPlatform, NativePlatform) in file("validation-core"))
+  .settings(name := "validation-core")
   .settings(crossDependencies(peknight.error))
-  .settings(
-    name := "validation-core",
-  )
 
 lazy val validationSpire = (crossProject(JVMPlatform, JSPlatform) in file("validation-spire"))
-  .settings(crossDependencies(peknight.error.spire))
   .dependsOn(validationCore)
-  .settings(
-    name := "validation-spire",
-  )
+  .settings(name := "validation-spire")
+  .settings(crossDependencies(peknight.error.spire))
